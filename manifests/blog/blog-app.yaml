@@ -21,7 +21,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: blog
-          image: ghcr.io/linusthorsell/blog:latest
+          image: ghcr.io/linusthorsell/blog:sha-56bc574
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
