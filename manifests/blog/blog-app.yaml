@@ -15,9 +15,17 @@ spec:
       labels:
         app: blog
     spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: blog
           image: ghcr.io/linusthorsell/blog:latest
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           ports:
             - containerPort: 3000
           env:

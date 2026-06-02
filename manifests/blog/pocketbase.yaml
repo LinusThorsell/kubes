@@ -1,14 +1,42 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: hcloud-volumes-expandable
+provisioner: csi.hetzner.cloud
+allowVolumeExpansion: true
+volumeBindingMode: Immediate
+reclaimPolicy: Retain
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pocketbase-data
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: hcloud-volumes-expandable
+  csi:
+    driver: csi.hetzner.cloud
+    volumeHandle: "105901197"
+    fsType: ext4
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: pocketbase-data
   namespace: blog
 spec:
+  storageClassName: hcloud-volumes-expandable
+  volumeName: pocketbase-data
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
+      storage: 10Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -29,9 +57,17 @@ spec:
       labels:
         app: pocketbase
     spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: pocketbase
           image: ghcr.io/muchobien/pocketbase:latest
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           ports:
             - containerPort: 8090
           env:
