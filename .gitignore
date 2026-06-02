@@ -1,0 +1,7 @@
+.env
+kubeconfig
+talosconfig
+controlplane.yaml
+worker.yaml
+
+/apps/
