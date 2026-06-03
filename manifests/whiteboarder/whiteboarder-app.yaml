@@ -24,7 +24,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: whiteboarder
-          image: ghcr.io/linusthorsell/whiteboarder:sha-012d178
+          image: ghcr.io/linusthorsell/whiteboarder:sha-330dd41
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
