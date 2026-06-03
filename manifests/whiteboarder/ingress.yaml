@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: whiteboarder
+  namespace: whiteboarder
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - whiteboarder.linusthorsell.se
+      secretName: whiteboarder-tls
+  rules:
+    - host: whiteboarder.linusthorsell.se
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: whiteboarder
+                port:
+                  number: 80

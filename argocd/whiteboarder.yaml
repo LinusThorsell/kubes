@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: whiteboarder
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/LinusThorsell/kubes.git
+    targetRevision: main
+    path: manifests/whiteboarder
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: whiteboarder
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
