@@ -13,6 +13,15 @@ pkgs.mkShell {
   ];
 
   shellHook = ''
+    if [ -f .env ]; then
+      set -a
+      source .env
+      set +a
+    fi
+
+    export TALOSCONFIG="$PWD/talos/talosconfig"
+    export KUBECONFIG="$PWD/talos/kubeconfig"
+
     echo "Talos / Hetzner / Argo CD shell loaded"
     echo ""
     echo "Available tools:"
@@ -21,7 +30,17 @@ pkgs.mkShell {
     echo "  kubectl  - Kubernetes CLI"
     echo "  argocd   - Argo CD CLI"
     echo ""
-    echo "Remember to set:"
-    echo "  export HCLOUD_TOKEN=..."
+
+    if [ -z "''${HCLOUD_TOKEN:-}" ]; then
+      echo "⚠ HCLOUD_TOKEN not set — add it to .env"
+    fi
+
+    if [ ! -f "$TALOSCONFIG" ]; then
+      echo "⚠ talosconfig not found at $TALOSCONFIG"
+    fi
+
+    if [ ! -f "$KUBECONFIG" ]; then
+      echo "⚠ kubeconfig not found at $KUBECONFIG"
+    fi
   '';
 }
