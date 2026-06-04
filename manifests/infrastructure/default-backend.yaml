@@ -31,8 +31,10 @@ data:
       <title>404 &mdash; Not Found</title>
       <style>
         *{margin:0;padding:0;box-sizing:border-box}
+        html{height:100%}
         body{
-          min-height:100vh;display:flex;align-items:center;justify-content:center;
+          height:100%;display:flex;align-items:center;justify-content:center;
+          overflow:hidden;
           font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
           background:#0a0a0a;color:#e5e5e5;
         }
