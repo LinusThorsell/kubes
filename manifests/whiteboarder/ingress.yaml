@@ -10,10 +10,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - whiteboarder.linusthorsell.se
-      secretName: whiteboarder-tls
+        - whiteboarder.linus.solutions
+      secretName: whiteboarder-linus-solutions-tls
   rules:
-    - host: whiteboarder.linusthorsell.se
+    - host: whiteboarder.linus.solutions
       http:
         paths:
           - path: /

@@ -35,7 +35,7 @@ spec:
             - name: NODE_ENV
               value: "production"
             - name: ORIGIN
-              value: "https://whiteboarder.linusthorsell.se"
+              value: "https://whiteboarder.linus.solutions"
           resources:
             requests:
               memory: "128Mi"
