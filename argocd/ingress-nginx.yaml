@@ -19,6 +19,8 @@ spec:
             enabled: false
           ingressClassResource:
             default: true
+          extraArgs:
+            default-backend-service: ingress-nginx/default-backend
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx

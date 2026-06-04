@@ -1,0 +1,148 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: default-backend-config
+  namespace: ingress-nginx
+data:
+  default.conf: |
+    server {
+        listen 8080;
+
+        location = /healthz {
+            return 200 "ok\n";
+        }
+
+        error_page 404 /404.html;
+
+        location / {
+            return 404;
+        }
+
+        location = /404.html {
+            root /usr/share/nginx/html;
+        }
+    }
+  404.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>404 &mdash; Not Found</title>
+      <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{
+          min-height:100vh;display:flex;align-items:center;justify-content:center;
+          font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+          background:#0a0a0a;color:#e5e5e5;
+        }
+        .container{text-align:center;padding:2rem}
+        h1{font-size:8rem;font-weight:700;letter-spacing:-.04em;line-height:1;color:#fff}
+        p{margin-top:.75rem;font-size:1.125rem;color:#a3a3a3}
+        .links{margin-top:2rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+        a{
+          display:inline-block;padding:.625rem 1.5rem;border-radius:.5rem;
+          font-size:.9375rem;font-weight:500;text-decoration:none;
+          border:1px solid #262626;color:#e5e5e5;transition:all .15s ease;
+        }
+        a:hover{background:#171717;border-color:#404040;color:#fff}
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>404</h1>
+        <p>There&rsquo;s nothing here.</p>
+        <div class="links">
+          <a href="https://linusthorsell.se">linusthorsell.se</a>
+          <a href="https://linus.solutions">linus.solutions</a>
+        </div>
+      </div>
+    </body>
+    </html>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: default-backend
+  namespace: ingress-nginx
+  labels:
+    app: default-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: default-backend
+  template:
+    metadata:
+      labels:
+        app: default-backend
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 101
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+            - name: config
+              mountPath: /usr/share/nginx/html/404.html
+              subPath: 404.html
+            - name: tmp
+              mountPath: /tmp
+            - name: cache
+              mountPath: /var/cache/nginx
+            - name: run
+              mountPath: /var/run
+          resources:
+            requests:
+              memory: "16Mi"
+              cpu: "5m"
+            limits:
+              memory: "32Mi"
+              cpu: "50m"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 2
+            periodSeconds: 10
+      volumes:
+        - name: config
+          configMap:
+            name: default-backend-config
+        - name: tmp
+          emptyDir: {}
+        - name: cache
+          emptyDir: {}
+        - name: run
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: default-backend
+  namespace: ingress-nginx
+spec:
+  selector:
+    app: default-backend
+  ports:
+    - port: 80
+      targetPort: 8080
