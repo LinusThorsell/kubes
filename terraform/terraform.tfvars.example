@@ -1,0 +1,13 @@
+# Copy to terraform.tfvars locally and fill in values for the new Hetzner project.
+# terraform.tfvars is gitignored.
+
+hcloud_token = "replace-with-new-project-token"
+
+cluster_name       = "kubes-next"
+location_name      = "hel1"
+control_plane_type = "cpx22"
+
+enable_ipv6 = true
+
+# Optional: pin admin API access instead of discovering your current public IPv4.
+# firewall_admin_source_ips = ["203.0.113.10/32"]

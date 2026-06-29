@@ -1,4 +1,10 @@
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs ? import <nixpkgs> {
+    config.allowUnfreePredicate = pkg:
+      builtins.elem (pkg.pname or (builtins.parseDrvName pkg.name).name) [
+        "terraform"
+      ];
+  }
+}:
 
 pkgs.mkShell {
   packages = with pkgs; [
@@ -6,6 +12,7 @@ pkgs.mkShell {
     talosctl
     kubectl
     argocd
+    terraform
     jq
     curl
     xz
@@ -19,16 +26,17 @@ pkgs.mkShell {
       set +a
     fi
 
-    export TALOSCONFIG="$PWD/talos/talosconfig"
-    export KUBECONFIG="$PWD/talos/kubeconfig"
+    export KUBECONFIG="$PWD/terraform/kubeconfig"
+    export TALOSCONFIG="$PWD/terraform/talosconfig"
 
     echo "Talos / Hetzner / Argo CD shell loaded"
     echo ""
     echo "Available tools:"
-    echo "  hcloud   - Hetzner Cloud CLI"
-    echo "  talosctl - Talos Linux CLI"
-    echo "  kubectl  - Kubernetes CLI"
-    echo "  argocd   - Argo CD CLI"
+    echo "  hcloud    - Hetzner Cloud CLI"
+    echo "  talosctl  - Talos Linux CLI"
+    echo "  kubectl   - Kubernetes CLI"
+    echo "  argocd    - Argo CD CLI"
+    echo "  terraform - Infrastructure as Code"
     echo ""
 
     if [ -z "''${HCLOUD_TOKEN:-}" ]; then
