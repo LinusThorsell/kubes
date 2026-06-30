@@ -99,7 +99,7 @@ metadata:
 spec:
   ingressClassName: tailscale
   rules:
-    - host: pb.linusthorsell.se
+    - host: pocketbase-admin
       http:
         paths:
           - path: /_/

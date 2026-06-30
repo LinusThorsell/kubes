@@ -47,16 +47,25 @@ Argo CD installs the operator from the official Tailscale Helm chart in
 ## Accessing the admin UI
 
 The Tailscale operator will reconcile the `pocketbase-admin` ingress in the
-`blog` namespace. It matches the `pb.linusthorsell.se` host and only forwards
-the PocketBase admin UI path (`/_/`). Check the resulting tailnet endpoint with:
+`blog` namespace. It creates a tailnet endpoint named `pocketbase-admin` and
+only forwards the PocketBase admin UI path (`/_/`). Check the resulting tailnet
+endpoint with:
 
 ```sh
 kubectl get ingress -n blog pocketbase-admin
 ```
 
-To use `pb.linusthorsell.se` while connected to the tailnet, configure split
-DNS so tailnet clients resolve `pb.linusthorsell.se` to the Tailscale ingress
-endpoint, while public DNS can continue pointing at the public nginx ingress.
+Access the admin UI over Tailscale with the MagicDNS name shown in the ingress
+status, usually:
 
-If you do not have split DNS, use the Tailscale ingress hostname directly for
-admin access.
+```txt
+https://pocketbase-admin.<tailnet-name>.ts.net/_/
+```
+
+Public `https://pb.linusthorsell.se/_/` is blocked by the nginx
+`pocketbase-admin-public-deny` ingress. Keep using `pb.linusthorsell.se` for the
+public PocketBase API.
+
+Using the exact public hostname `pb.linusthorsell.se` for the admin UI requires
+a custom tailnet DNS/reverse-proxy setup. The Tailscale Kubernetes Operator
+ingress host must be a tailnet endpoint name, not the public custom domain.
