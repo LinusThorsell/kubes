@@ -26,7 +26,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: blog
-          image: ghcr.io/linusthorsell/blog:sha-2844d26
+          image: ghcr.io/linusthorsell/blog:sha-3049ea8
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
