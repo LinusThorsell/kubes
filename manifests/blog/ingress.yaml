@@ -69,18 +69,8 @@ kind: Ingress
 metadata:
   name: pocketbase-admin
   namespace: blog
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/whitelist-source-range: "127.0.0.1/32"
-    nginx.ingress.kubernetes.io/limit-connections: "2"
-    nginx.ingress.kubernetes.io/limit-rps: "2"
 spec:
-  ingressClassName: nginx
-  tls:
-    - hosts:
-        - pb.linusthorsell.se
-      secretName: pocketbase-tls
+  ingressClassName: tailscale
   rules:
     - host: pb.linusthorsell.se
       http:
