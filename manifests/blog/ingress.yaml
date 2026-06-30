@@ -105,7 +105,7 @@ spec:
     - host: pocketbase-admin
       http:
         paths:
-          - path: /_/
+          - path: /
             pathType: Prefix
             backend:
               service:

@@ -48,8 +48,8 @@ Argo CD installs the operator from the official Tailscale Helm chart in
 
 The Tailscale operator will reconcile the `pocketbase-admin` ingress in the
 `blog` namespace. It creates a tailnet endpoint named `pocketbase-admin` and
-only forwards the PocketBase admin UI path (`/_/`). Check the resulting tailnet
-endpoint with:
+forwards all paths on that private tailnet hostname to PocketBase. Check the
+resulting tailnet endpoint with:
 
 ```sh
 kubectl get ingress -n blog pocketbase-admin
