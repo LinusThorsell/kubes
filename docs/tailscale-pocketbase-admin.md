@@ -63,8 +63,9 @@ https://pocketbase-admin.<tailnet-name>.ts.net/_/
 ```
 
 Public `https://pb.linusthorsell.se/_/` is blocked by the nginx
-`pocketbase-admin-public-deny` ingress. Keep using `pb.linusthorsell.se` for the
-public PocketBase API.
+`pocketbase-admin-public-deny` ingress. The public `_superusers` API prefix is
+blocked the same way. Keep using `pb.linusthorsell.se` for the public PocketBase
+API.
 
 Using the exact public hostname `pb.linusthorsell.se` for the admin UI requires
 a custom tailnet DNS/reverse-proxy setup. The Tailscale Kubernetes Operator
