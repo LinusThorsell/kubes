@@ -19,7 +19,7 @@ kubes/
 
 | App | Domain | Image |
 |-----|--------|-------|
-| Blog (SvelteKit) | linusthorsell.se | ghcr.io/linusthorsell/blog |
+| Blog (SvelteKit) | linusthorsell.se, linusthorsell.com | ghcr.io/linusthorsell/blog |
 | PocketBase | pb.linusthorsell.se | ghcr.io/muchobien/pocketbase |
 | Whiteboarder (SvelteKit) | whiteboarder.linusthorsell.se | ghcr.io/linusthorsell/whiteboarder |
 

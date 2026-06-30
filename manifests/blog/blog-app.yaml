@@ -37,8 +37,10 @@ spec:
           env:
             - name: NODE_ENV
               value: "production"
-            - name: ORIGIN
-              value: "https://linusthorsell.se"
+            - name: PROTOCOL_HEADER
+              value: "x-forwarded-proto"
+            - name: HOST_HEADER
+              value: "x-forwarded-host"
             - name: PUBLIC_POCKETBASE_URL
               value: "https://pb.linusthorsell.se"
             - name: POCKETBASE_URL

@@ -12,9 +12,31 @@ spec:
     - hosts:
         - linusthorsell.se
         - www.linusthorsell.se
+        - linusthorsell.com
+        - www.linusthorsell.com
       secretName: blog-tls
   rules:
     - host: linusthorsell.se
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: blog
+                port:
+                  number: 80
+    - host: linusthorsell.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: blog
+                port:
+                  number: 80
+    - host: www.linusthorsell.com
       http:
         paths:
           - path: /
