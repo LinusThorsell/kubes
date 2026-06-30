@@ -3,8 +3,10 @@ kind: Application
 metadata:
   name: whiteboarder
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
 spec:
-  project: default
+  project: whiteboarder
   source:
     repoURL: https://github.com/LinusThorsell/kubes.git
     targetRevision: main

@@ -4,37 +4,37 @@ terraform {
   required_providers {
     hcloud = {
       source  = "hetznercloud/hcloud"
-      version = ">= 1.60.1"
+      version = "1.66.0"
     }
 
     imager = {
       source  = "hcloud-talos/imager"
-      version = ">= 1.0.6"
+      version = "1.0.15"
     }
 
     helm = {
       source  = "hashicorp/helm"
-      version = ">= 3.2.0"
+      version = "3.2.0"
     }
 
     kubectl = {
       source  = "alekc/kubectl"
-      version = ">= 2.4.1"
+      version = "2.4.1"
     }
 
     local = {
       source  = "hashicorp/local"
-      version = ">= 2.9.0"
+      version = "2.9.0"
     }
 
     talos = {
       source  = "siderolabs/talos"
-      version = ">= 0.7.0"
+      version = "0.11.0"
     }
 
     http = {
       source  = "hashicorp/http"
-      version = ">= 3.5.0"
+      version = "3.6.0"
     }
   }
 }

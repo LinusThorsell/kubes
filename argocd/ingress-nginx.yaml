@@ -3,12 +3,14 @@ kind: Application
 metadata:
   name: ingress-nginx
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
 spec:
-  project: default
+  project: platform
   source:
     repoURL: https://kubernetes.github.io/ingress-nginx
     chart: ingress-nginx
-    targetRevision: 4.*
+    targetRevision: 4.13.3
     helm:
       values: |
         controller:
@@ -37,5 +39,5 @@ metadata:
   name: ingress-nginx
   labels:
     pod-security.kubernetes.io/enforce: privileged
-    pod-security.kubernetes.io/audit: privileged
-    pod-security.kubernetes.io/warn: privileged
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted

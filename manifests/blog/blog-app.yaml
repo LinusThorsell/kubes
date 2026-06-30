@@ -7,6 +7,7 @@ metadata:
     app: blog
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: blog
@@ -15,6 +16,7 @@ spec:
       labels:
         app: blog
     spec:
+      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -27,6 +29,7 @@ spec:
           image: ghcr.io/linusthorsell/blog:sha-c31d7af
           securityContext:
             allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
             capabilities:
               drop: ["ALL"]
           ports:
@@ -53,12 +56,24 @@ spec:
               port: 3000
             initialDelaySeconds: 10
             periodSeconds: 30
+          startupProbe:
+            httpGet:
+              path: /
+              port: 3000
+            failureThreshold: 30
+            periodSeconds: 2
           readinessProbe:
             httpGet:
               path: /
               port: 3000
             initialDelaySeconds: 5
             periodSeconds: 10
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
@@ -71,3 +86,14 @@ spec:
   ports:
     - port: 80
       targetPort: 3000
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: blog
+  namespace: blog
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: blog

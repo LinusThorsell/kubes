@@ -2,3 +2,37 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: blog
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: blog-quota
+  namespace: blog
+spec:
+  hard:
+    requests.cpu: "750m"
+    requests.memory: "512Mi"
+    limits.cpu: "2000m"
+    limits.memory: "1Gi"
+    requests.storage: "20Gi"
+    persistentvolumeclaims: "3"
+    pods: "10"
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: blog-limits
+  namespace: blog
+spec:
+  limits:
+    - type: Container
+      default:
+        cpu: "500m"
+        memory: "256Mi"
+      defaultRequest:
+        cpu: "50m"
+        memory: "64Mi"
