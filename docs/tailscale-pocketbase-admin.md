@@ -69,3 +69,6 @@ public PocketBase API.
 Using the exact public hostname `pb.linusthorsell.se` for the admin UI requires
 a custom tailnet DNS/reverse-proxy setup. The Tailscale Kubernetes Operator
 ingress host must be a tailnet endpoint name, not the public custom domain.
+
+The ingress rule host must match `spec.tls.hosts[0]`; otherwise the Tailscale
+operator rejects the backend as unsupported.

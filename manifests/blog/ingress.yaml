@@ -98,6 +98,9 @@ metadata:
   namespace: blog
 spec:
   ingressClassName: tailscale
+  tls:
+    - hosts:
+        - pocketbase-admin
   rules:
     - host: pocketbase-admin
       http:
