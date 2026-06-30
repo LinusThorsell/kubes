@@ -14,10 +14,10 @@ metadata:
   namespace: blog
 spec:
   hard:
-    requests.cpu: "750m"
-    requests.memory: "512Mi"
-    limits.cpu: "2000m"
-    limits.memory: "1Gi"
+    requests.cpu: "1500m"
+    requests.memory: "1Gi"
+    limits.cpu: "4000m"
+    limits.memory: "3Gi"
     requests.storage: "20Gi"
     persistentvolumeclaims: "3"
     pods: "10"
