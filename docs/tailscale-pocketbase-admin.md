@@ -1,18 +1,35 @@
 # PocketBase admin over Tailscale
 
-This repo installs the Tailscale Kubernetes Operator and exposes only the
-PocketBase admin UI path (`/_/`) through a tailnet ingress.
+This repo installs the Tailscale Kubernetes Operator and exposes PocketBase
+admin access through an admin-only tailnet ingress.
 
 ## One-time Tailscale setup
 
-1. Add tag ownership in the Tailscale ACL policy:
+1. Add tag ownership and an explicit admin-only ACL in the Tailscale policy:
 
 ```json
 {
+  "acls": [
+    {
+      "action": "accept",
+      "src": ["autogroup:admin"],
+      "dst": ["tag:k8s:*"]
+    }
+  ],
   "tagOwners": {
     "tag:k8s-operator": ["autogroup:admin"],
     "tag:k8s": ["tag:k8s-operator"]
   }
+}
+```
+
+Do not keep the default allow-all rule:
+
+```json
+{
+  "action": "accept",
+  "src": ["*"],
+  "dst": ["*:*"]
 }
 ```
 
@@ -66,6 +83,12 @@ Public `https://pb.linusthorsell.se/_/` is blocked by the nginx
 `pocketbase-admin-public-deny` ingress. The public `_superusers` API prefix is
 blocked the same way. Keep using `pb.linusthorsell.se` for the public PocketBase
 API.
+
+The tailnet ingress intentionally forwards `/`, not only `/_/`. PocketBase's
+admin UI is loaded from `/_/`, but it calls API endpoints on the same host, such
+as `/api/collections/_superusers/...`. Access to this private hostname is
+restricted by the tailnet ACL above, so it is treated as an admin-only endpoint
+rather than a public API path.
 
 Using the exact public hostname `pb.linusthorsell.se` for the admin UI requires
 a custom tailnet DNS/reverse-proxy setup. The Tailscale Kubernetes Operator
