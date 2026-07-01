@@ -99,14 +99,14 @@ operator rejects the backend as unsupported.
 
 ## Accessing Argo CD
 
-The `argocd-tailscale` service in the `argocd` namespace exposes the existing
-`argocd-server` pods over Tailscale using L3 Service exposure. This preserves
-Argo CD's HTTPS listener, matching the usual port-forward access pattern.
+The `argocd` ingress in the `argocd` namespace exposes the existing
+`argocd-server` service over Tailscale using the same L7 ingress pattern as
+PocketBase admin.
 
 Check the resulting tailnet endpoint with:
 
 ```sh
-kubectl get service -n argocd argocd-tailscale
+kubectl get ingress -n argocd argocd
 ```
 
 Access Argo CD over Tailscale with the MagicDNS name shown in the service
@@ -115,7 +115,3 @@ status, usually:
 ```txt
 https://argocd.<tailnet-name>.ts.net
 ```
-
-Because this is L3 TCP forwarding to Argo CD's own HTTPS listener, the browser
-may show Argo CD's self-signed certificate warning, just like direct
-port-forward access to `argocd-server` on port 443.
