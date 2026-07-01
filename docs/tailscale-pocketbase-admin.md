@@ -115,3 +115,8 @@ status, usually:
 ```txt
 https://argocd.<tailnet-name>.ts.net
 ```
+
+Argo CD is configured with `server.insecure=true` in the Terraform-managed Helm
+release because the Tailscale ingress terminates HTTPS and forwards HTTP to the
+in-cluster `argocd-server` service. Without that setting, Argo CD redirects the
+backend HTTP request back to HTTPS and browsers report a redirect loop.

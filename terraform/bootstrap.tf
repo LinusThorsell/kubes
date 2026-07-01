@@ -7,6 +7,16 @@ resource "helm_release" "argocd" {
   atomic           = true
   timeout          = 600
 
+  values = [
+    yamlencode({
+      configs = {
+        params = {
+          "server.insecure" = true
+        }
+      }
+    })
+  ]
+
   depends_on = [
     module.talos,
     local_file.kubeconfig
