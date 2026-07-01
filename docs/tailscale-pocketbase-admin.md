@@ -1,7 +1,7 @@
-# PocketBase admin over Tailscale
+# Admin UIs over Tailscale
 
 This repo installs the Tailscale Kubernetes Operator and exposes PocketBase
-admin access through an admin-only tailnet ingress.
+and Argo CD admin access through admin-only tailnet endpoints.
 
 ## One-time Tailscale setup
 
@@ -96,3 +96,26 @@ ingress host must be a tailnet endpoint name, not the public custom domain.
 
 The ingress rule host must match `spec.tls.hosts[0]`; otherwise the Tailscale
 operator rejects the backend as unsupported.
+
+## Accessing Argo CD
+
+The `argocd-tailscale` service in the `argocd` namespace exposes the existing
+`argocd-server` pods over Tailscale using L3 Service exposure. This preserves
+Argo CD's HTTPS listener, matching the usual port-forward access pattern.
+
+Check the resulting tailnet endpoint with:
+
+```sh
+kubectl get service -n argocd argocd-tailscale
+```
+
+Access Argo CD over Tailscale with the MagicDNS name shown in the service
+status, usually:
+
+```txt
+https://argocd.<tailnet-name>.ts.net
+```
+
+Because this is L3 TCP forwarding to Argo CD's own HTTPS listener, the browser
+may show Argo CD's self-signed certificate warning, just like direct
+port-forward access to `argocd-server` on port 443.
