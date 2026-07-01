@@ -45,6 +45,8 @@ spec:
               value: "https://pb.linusthorsell.se"
             - name: POCKETBASE_URL
               value: "http://pocketbase.blog.svc.cluster.local:8090"
+            - name: BODY_SIZE_LIMIT
+              value: "50M"
           resources:
             requests:
               memory: "128Mi"
