@@ -75,6 +75,42 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
+  name: drone
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-30"
+spec:
+  sourceRepos:
+    - https://github.com/LinusThorsell/kubes.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: drone
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+  namespaceResourceWhitelist:
+    - group: ""
+      kind: Service
+    - group: ""
+      kind: ResourceQuota
+    - group: ""
+      kind: LimitRange
+    - group: apps
+      kind: Deployment
+    - group: apps
+      kind: ReplicaSet
+    - group: ""
+      kind: Pod
+    - group: networking.k8s.io
+      kind: Ingress
+    - group: networking.k8s.io
+      kind: NetworkPolicy
+    - group: policy
+      kind: PodDisruptionBudget
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
   name: platform
   namespace: argocd
   annotations:

@@ -9,6 +9,7 @@ kubes/
 ├── argocd/            # ArgoCD Application definitions
 ├── manifests/
 │   ├── blog/          # Blog app + PocketBase
+│   ├── drone/         # How to Tame a Drone course
 │   ├── whiteboarder/  # Whiteboarder app
 │   └── infrastructure/# Cluster-level resources (cert-manager issuer)
 ├── talos/             # Talos machine configs
@@ -21,11 +22,12 @@ kubes/
 |-----|--------|-------|
 | Blog (SvelteKit) | linusthorsell.se, linusthorsell.com | ghcr.io/linusthorsell/blog |
 | PocketBase | pb.linusthorsell.se | ghcr.io/muchobien/pocketbase |
-| Whiteboarder (SvelteKit) | whiteboarder.linusthorsell.se | ghcr.io/linusthorsell/whiteboarder |
+| How to Tame a Drone (React) | drone.linus.solutions | ghcr.io/linusthorsell/how_to_tame_a_drone |
+| Whiteboarder (SvelteKit) | whiteboarder.linus.solutions | ghcr.io/linusthorsell/whiteboarder |
 
 ## Deployment
 
-Pushes to the [blog repo](https://github.com/LinusThorsell/blog) or [whiteboarder repo](https://github.com/LinusThorsell/whiteboarder) build a new container image and update the manifests here automatically. ArgoCD syncs changes from this repo to the cluster.
+Pushes to the [blog repo](https://github.com/LinusThorsell/blog), [How to Tame a Drone repo](https://github.com/LinusThorsell/how_to_tame_a_drone), or [whiteboarder repo](https://github.com/LinusThorsell/whiteboarder) build a new container image and update the manifests here automatically. ArgoCD syncs changes from this repo to the cluster.
 
 ## Prerequisites
 
