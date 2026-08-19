@@ -26,7 +26,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: drone
-          image: ghcr.io/linusthorsell/how_to_tame_a_drone:sha-71e8223
+          image: ghcr.io/linusthorsell/how_to_tame_a_drone:sha-45c0e24
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
