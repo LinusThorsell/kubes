@@ -16,6 +16,13 @@ spec:
     - host: drone.linus.solutions
       http:
         paths:
+          - path: /multiplayer/socket.io
+            pathType: Prefix
+            backend:
+              service:
+                name: multiplayer
+                port:
+                  number: 3001
           - path: /
             pathType: Prefix
             backend:
