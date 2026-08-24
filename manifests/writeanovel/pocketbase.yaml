@@ -1,0 +1,117 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pocketbase-data
+  namespace: writeanovel
+spec:
+  storageClassName: hcloud-volumes
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pocketbase
+  namespace: writeanovel
+  labels:
+    app: pocketbase
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: pocketbase
+  template:
+    metadata:
+      labels:
+        app: pocketbase
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: pocketbase
+          image: ghcr.io/linusthorsell/writeanovel-pocketbase:latest
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          ports:
+            - containerPort: 8090
+          env:
+            - name: PB_HOST
+              value: "0.0.0.0"
+            - name: PB_PORT
+              value: "8090"
+            - name: PB_APP_URL
+              value: "https://writeanovel.linus.solutions"
+          volumeMounts:
+            - name: data
+              mountPath: /pb_data
+            - name: tmp
+              mountPath: /tmp
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 8090
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          startupProbe:
+            httpGet:
+              path: /api/health
+              port: 8090
+            failureThreshold: 30
+            periodSeconds: 2
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 8090
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: pocketbase-data
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pocketbase
+  namespace: writeanovel
+spec:
+  selector:
+    app: pocketbase
+  ports:
+    - port: 8090
+      targetPort: 8090
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: pocketbase
+  namespace: writeanovel
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: pocketbase
