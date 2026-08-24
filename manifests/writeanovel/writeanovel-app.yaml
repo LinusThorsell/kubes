@@ -26,7 +26,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: writeanovel
-          image: ghcr.io/linusthorsell/writeanovel:sha-ab42daf
+          image: ghcr.io/linusthorsell/writeanovel:sha-088cfc5
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
