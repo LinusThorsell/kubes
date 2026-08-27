@@ -41,7 +41,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: pocketbase
-          image: ghcr.io/linusthorsell/writeanovel-pocketbase:sha-c6a941c
+          image: ghcr.io/linusthorsell/writeanovel-pocketbase:sha-f7c4309
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
